@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Swappr — Service Exchange App Demo</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #e8edf5;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 32px 16px 48px;
+  }
+
+  h1.site-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #4a5568;
+    margin-bottom: 4px;
+    letter-spacing: 0.02em;
+  }
+  p.site-sub {
+    font-size: 12px;
+    color: #94a3b8;
+    margin-bottom: 24px;
+  }
+
+  /* ── Phone frame ── */
+  .phone-frame {
+    width: 375px;
+    height: 780px;
+    background: #1a1a2e;
+    border-radius: 50px;
+    padding: 12px;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.08) inset;
+    position: relative;
+  }
+  .phone-notch {
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 32px;
+    background: #1a1a2e;
+    border-radius: 0 0 20px 20px;
+    z-index: 10;
+  }
+  .phone-screen {
+    width: 100%;
+    height: 100%;
+    background: #f8fafc;
+    border-radius: 40px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Status bar ── */
+  .status-bar {
+    background: #fff;
+    padding: 14px 20px 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+    z-index: 5;
+  }
+  .status-time { font-size: 12px; font-weight: 600; color: #1e293b; }
+  .status-icons { display: flex; gap: 5px; align-items: center; font-size: 11px; color: #64748b; }
+
+  /* ── Screens ── */
+  .screen {
+    display: none;
+    flex: 1;
+    flex-direction: column;
+    overflow: hidden;
+    background: #f8fafc;
+  }
+  .screen.active { display: flex; }
+
+  .screen-scroll {
+    flex: 1;
+    overflow-y: auto;
+    scrollbar-width: none;
+  }
+  .screen-scroll::-webkit-scrollbar { display: none; }
+
+  /* ── Bottom nav ── */
+  .bottom-nav {
+    background: #fff;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    padding: 8px 0 16px;
+    flex-shrink: 0;
+  }
+  .nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    cursor: pointer;
+    padding: 4px 0;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .nav-item svg { width: 22px; height: 22px; stroke: #94a3b8; stroke-width: 1.8; fill: none; transition: stroke 0.15s; }
+  .nav-item span { font-size: 9px; color: #94a3b8; transition: color 0.15s; }
+  .nav-item.active svg { stroke: #6366f1; }
+  .nav-item.active span { color: #6366f1; }
+
+  /* ── Top bar ── */
+  .top-bar {
+    background: #fff;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid #f1f5f9;
+    flex-shrink: 0;
+  }
+  .top-bar h2 { font-size: 16px; font-weight: 600; color: #1e293b; flex: 1; }
+  .top-bar .back-btn {
+    width: 28px; height: 28px; background: #f1f5f9; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center; cursor: pointer;
+  }
+  .top-bar .back-btn svg { width: 16px; height: 16px; stroke: #475569; stroke-width: 2; fill: none; }
+  .notif-badge {
+    width: 28px; height: 28px; background: #f1f5f9; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center; cursor: pointer;
+    position: relative;
+  }
+  .notif-badge svg { width: 16px; height: 16px; stroke: #475569; stroke-width: 2; fill: none; }
+  .notif-dot {
+    position: absolute; top: 5px; right: 5px;
+    width: 7px; height: 7px; background: #ef4444; border-radius: 50%;
+    border: 1.5px solid #fff;
+  }
+
+  /* ── Colours ── */
+  :root {
+    --indigo: #6366f1;
+    --indigo-light: #eef2ff;
+    --indigo-dark: #4338ca;
+    --teal: #0d9488;
+    --teal-light: #f0fdfa;
+    --amber: #d97706;
+    --amber-light: #fffbeb;
+    --red: #ef4444;
+    --red-light: #fef2f2;
+    --green: #16a34a;
+    --green-light: #f0fdf4;
+    --gray: #64748b;
+    --gray-light: #f1f5f9;
+  }
+
+  /* ── Common components ── */
+  .btn-primary {
+    width: 100%; padding: 13px; background: var(--indigo);
+    color: #fff; border: none; border-radius: 12px;
+    font-size: 14px; font-weight: 600; cursor: pointer;
+    transition: background 0.15s;
+  }
+  .btn-primary:active { background: var(--indigo-dark); }
+  .btn-outline {
+    width: 100%; padding: 12px; background: transparent;
+    color: var(--indigo); border: 1.5px solid var(--indigo); border-radius: 12px;
+    font-size: 14px; font-weight: 600; cursor: pointer;
+  }
+  .btn-teal {
+    width: 100%; padding: 13px; background: var(--teal);
+    color: #fff; border: none; border-radius: 12px;
+    font-size: 14px; font-weight: 600; cursor: pointer;
+  }
+  .input-field {
+    width: 100%; padding: 11px 14px;
+    background: #f8fafc; border: 1.5px solid #e2e8f0;
+    border-radius: 10px; font-size: 13px; color: #1e293b;
+    outline: none; transition: border-color 0.15s;
+  }
+  .input-field:focus { border-color: var(--indigo); background: #fff; }
+  .input-label { font-size: 11px; font-weight: 600; color: #475569; margin-bottom: 5px; display: block; }
+
+  .badge {
+    display: inline-block; padding: 3px 8px;
+    border-radius: 99px; font-size: 10px; font-weight: 600;
+  }
+  .badge-indigo { background: var(--indigo-light); color: var(--indigo); }
+  .badge-teal   { background: var(--teal-light); color: var(--teal); }
+  .badge-amber  { background: var(--amber-light); color: var(--amber); }
+  .badge-green  { background: var(--green-light); color: var(--green); }
+  .badge-red    { background: var(--red-light); color: var(--red); }
+  .badge-gray   { background: #f1f5f9; color: #475569; }
+
+  .card {
+    background: #fff; border-radius: 14px;
+    border: 1px solid #e2e8f0; padding: 14px 16px;
+  }
+  .avatar {
+    width: 40px; height: 40px; border-radius: 12px;
+    background: var(--indigo-light); display: flex; align-items: center;
+    justify-content: center; font-size: 14px; font-weight: 700; color: var(--indigo);
+    flex-shrink: 0;
+  }
+  .avatar.teal { background: var(--teal-light); color: var(--teal); }
+  .avatar.amber { background: var(--amber-light); color: var(--amber); }
+
+  .stars { color: #fbbf24; font-size: 12px; }
+
+  /* ── FAB ── */
+  .fab {
+    position: absolute; bottom: 80px; right: 18px;
+    width: 50px; height: 50px;
+    background: var(--indigo); border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 16px rgba(99,102,241,0.4);
+    cursor: pointer; z-index: 20;
+  }
+  .fab svg { width: 22px; height: 22px; stroke: #fff; stroke-width: 2.5; fill: none; }
+
+  /* ════════════════════════════════
+     SCREEN: LOGIN
+  ════════════════════════════════ */
+  #screen-login .hero {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    padding: 40px 24px 32px;
+    text-align: center;
+  }
+  #screen-login .hero-icon {
+    width: 64px; height: 64px; background: rgba(255,255,255,0.2);
+    border-radius: 20px; display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 16px; font-size: 28px;
+  }
+  #screen-login .hero h1 { font-size: 22px; font-weight: 700; color: #fff; }
+  #screen-login .hero p { font-size: 12px; color: rgba(255,255,255,0.8); margin-top: 4px; }
+  #screen-login .form-area { padding: 24px 20px; display: flex; flex-direction: column; gap: 14px; }
+  #screen-login .divider { display: flex; align-items: center; gap: 10px; }
+  #screen-login .divider hr { flex: 1; border: none; border-top: 1px solid #e2e8f0; }
+  #screen-login .divider span { font-size: 11px; color: #94a3b8; }
+
+  /* ════════════════════════════════
+     SCREEN: REGISTER
+  ════════════════════════════════ */
+  #screen-register .form-area { padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+
+  /* ════════════════════════════════
+     SCREEN: HOME
+  ════════════════════════════════ */
+  #screen-home .home-header {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    padding: 16px 16px 24px;
+  }
+  #screen-home .home-header .greet { font-size: 12px; color: rgba(255,255,255,0.75); margin-bottom: 2px; }
+  #screen-home .home-header .name { font-size: 18px; font-weight: 700; color: #fff; }
+  #screen-home .search-wrap {
+    margin: -14px 16px 0;
+    background: #fff; border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    display: flex; align-items: center; padding: 10px 14px; gap: 8px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  }
+  #screen-home .search-wrap svg { width: 16px; height: 16px; stroke: #94a3b8; fill: none; stroke-width: 2; flex-shrink: 0; }
+  #screen-home .search-wrap span { font-size: 12px; color: #94a3b8; }
+  #screen-home .home-body { padding: 18px 16px; display: flex; flex-direction: column; gap: 20px; }
+  #screen-home .section-title {
+    font-size: 13px; font-weight: 700; color: #1e293b; margin-bottom: 10px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  #screen-home .section-title span { font-size: 11px; font-weight: 500; color: var(--indigo); cursor: pointer; }
+  .service-card {
+    background: #fff; border-radius: 14px; border: 1px solid #e2e8f0;
+    overflow: hidden; cursor: pointer;
+  }
+  .service-card-img {
+    height: 80px; background: var(--indigo-light);
+    display: flex; align-items: center; justify-content: center; font-size: 30px;
+  }
+  .service-card-body { padding: 10px 12px; }
+  .service-card-body .sc-title { font-size: 12px; font-weight: 600; color: #1e293b; }
+  .service-card-body .sc-user { font-size: 10px; color: #64748b; margin-top: 1px; }
+  .service-card-body .sc-bottom { display: flex; justify-content: space-between; align-items: center; margin-top: 6px; }
+  .service-card-body .sc-price { font-size: 12px; font-weight: 700; color: var(--indigo); }
+  .services-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  .req-row { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+  .req-row .req-info { flex: 1; }
+  .req-row .req-info .ri-title { font-size: 12px; font-weight: 600; color: #1e293b; }
+  .req-row .req-info .ri-sub { font-size: 10px; color: #64748b; margin-top: 1px; }
+  .req-row .req-arrow svg { width: 14px; height: 14px; stroke: #cbd5e1; stroke-width: 2; fill: none; }
+
+  .categories { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+  .categories::-webkit-scrollbar { display: none; }
+  .cat-chip {
+    flex-shrink: 0; padding: 6px 14px;
+    background: #fff; border: 1px solid #e2e8f0;
+    border-radius: 99px; font-size: 11px; font-weight: 500; color: #475569; cursor: pointer;
+  }
+  .cat-chip.active { background: var(--indigo); color: #fff; border-color: var(--indigo); }
+
+  /* ════════════════════════════════
+     SCREEN: VIEW SERVICE
+  ════════════════════════════════ */
+  #screen-service .service-hero {
+    height: 160px; background: var(--indigo-light);
+    display: flex; align-items: center; justify-content: center; font-size: 56px; flex-shrink: 0;
+  }
+  #screen-service .service-body { padding: 16px; display: flex; flex-direction: column; gap: 14px; }
+  #screen-service .provider-row { display: flex; align-items: center; gap: 10px; }
+  #screen-service .provider-row .prov-info { flex: 1; }
+  #screen-service .provider-row .prov-name { font-size: 13px; font-weight: 600; color: #1e293b; }
+  #screen-service .provider-row .prov-meta { font-size: 10px; color: #64748b; }
+  .review-item { display: flex; gap: 10px; }
+  .review-item .rev-info .rev-name { font-size: 11px; font-weight: 600; color: #1e293b; }
+  .review-item .rev-info .rev-text { font-size: 10px; color: #64748b; margin-top: 2px; }
+  .action-row { display: flex; gap: 8px; }
+  .action-row button { flex: 1; }
+
+  /* ════════════════════════════════
+     SCREEN: OFFER SERVICE (Create)
+  ════════════════════════════════ */
+  #screen-offer .form-area { padding: 16px; display: flex; flex-direction: column; gap: 14px; }
+  .type-toggle { display: flex; gap: 8px; }
+  .type-btn {
+    flex: 1; padding: 10px; border-radius: 10px; border: 1.5px solid #e2e8f0;
+    font-size: 12px; font-weight: 600; color: #475569; cursor: pointer;
+    text-align: center; background: #fff; transition: all 0.15s;
+  }
+  .type-btn.active { border-color: var(--indigo); background: var(--indigo-light); color: var(--indigo); }
+  .emoji-picker { display: flex; gap: 10px; flex-wrap: wrap; }
+  .ep { width: 38px; height: 38px; border-radius: 10px; background: #f1f5f9;
+    display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; border: 2px solid transparent; }
+  .ep.active { border-color: var(--indigo); background: var(--indigo-light); }
+
+  /* ════════════════════════════════
+     SCREEN: NOTIFICATIONS + STATUS
+  ════════════════════════════════ */
+  #screen-notif .notif-body { padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; }
+  .notif-item {
+    background: #fff; border-radius: 12px; border: 1px solid #e2e8f0;
+    padding: 12px 14px; display: flex; align-items: flex-start; gap: 10px;
+  }
+  .notif-item.unread { background: #fafaff; border-color: #c7d2fe; }
+  .notif-icon {
+    width: 34px; height: 34px; border-radius: 10px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 15px;
+  }
+  .notif-icon.blue { background: var(--indigo-light); }
+  .notif-icon.green { background: var(--green-light); }
+  .notif-icon.amber { background: var(--amber-light); }
+  .notif-icon.red { background: var(--red-light); }
+  .notif-text { flex: 1; }
+  .notif-text .nt-title { font-size: 12px; font-weight: 600; color: #1e293b; }
+  .notif-text .nt-sub { font-size: 10px; color: #64748b; margin-top: 2px; }
+  .notif-text .nt-time { font-size: 9px; color: #94a3b8; margin-top: 4px; }
+  .unread-dot { width: 7px; height: 7px; background: var(--indigo); border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
+
+  .timeline { display: flex; flex-direction: column; gap: 0; }
+  .tl-item { display: flex; gap: 10px; padding-bottom: 14px; }
+  .tl-item:last-child { padding-bottom: 0; }
+  .tl-left { display: flex; flex-direction: column; align-items: center; }
+  .tl-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+  .tl-dot.done { background: var(--green); }
+  .tl-dot.active { background: var(--indigo); box-shadow: 0 0 0 3px rgba(99,102,241,0.2); }
+  .tl-dot.pending { background: #e2e8f0; }
+  .tl-line { width: 2px; flex: 1; background: #e2e8f0; margin-top: 3px; }
+  .tl-body { flex: 1; }
+  .tl-body .tl-title { font-size: 12px; font-weight: 600; color: #1e293b; }
+  .tl-body .tl-sub { font-size: 10px; color: #64748b; margin-top: 2px; }
+
+  /* ════════════════════════════════
+     SCREEN: PROFILE
+  ════════════════════════════════ */
+  #screen-profile .profile-hero {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    padding: 20px 16px 32px; text-align: center;
+  }
+  #screen-profile .profile-avatar {
+    width: 72px; height: 72px; border-radius: 22px; background: rgba(255,255,255,0.25);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px; font-weight: 700; color: #fff; margin: 0 auto 10px;
+    border: 3px solid rgba(255,255,255,0.4);
+  }
+  #screen-profile .profile-hero h2 { font-size: 17px; font-weight: 700; color: #fff; }
+  #screen-profile .profile-hero p { font-size: 11px; color: rgba(255,255,255,0.75); margin-top: 3px; }
+  #screen-profile .profile-hero .edit-btn {
+    margin-top: 10px; display: inline-block; padding: 6px 16px;
+    background: rgba(255,255,255,0.2); border-radius: 99px;
+    font-size: 11px; color: #fff; cursor: pointer;
+  }
+  #screen-profile .stats-row {
+    display: flex; margin: -16px 16px 0;
+    background: #fff; border-radius: 14px; border: 1px solid #e2e8f0;
+    overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  }
+  #screen-profile .stat-cell {
+    flex: 1; padding: 12px 8px; text-align: center; border-right: 1px solid #e2e8f0;
+  }
+  #screen-profile .stat-cell:last-child { border-right: none; }
+  #screen-profile .stat-num { font-size: 16px; font-weight: 700; color: #1e293b; }
+  #screen-profile .stat-label { font-size: 9px; color: #64748b; margin-top: 2px; }
+  #screen-profile .profile-body { padding: 20px 16px; display: flex; flex-direction: column; gap: 12px; }
+  .menu-row {
+    background: #fff; border-radius: 12px; border: 1px solid #e2e8f0;
+    padding: 12px 14px; display: flex; align-items: center; gap: 10px; cursor: pointer;
+  }
+  .menu-row .mr-icon {
+    width: 32px; height: 32px; border-radius: 9px; display: flex; align-items: center;
+    justify-content: center; font-size: 14px; flex-shrink: 0;
+  }
+  .menu-row .mr-text { flex: 1; font-size: 13px; font-weight: 500; color: #1e293b; }
+  .menu-row .mr-arrow svg { width: 14px; height: 14px; stroke: #cbd5e1; stroke-width: 2; fill: none; }
+
+  /* ════════════════════════════════
+     SCREEN: EDIT PROFILE
+  ════════════════════════════════ */
+  #screen-edit .form-area { padding: 16px; display: flex; flex-direction: column; gap: 14px; }
+  #screen-edit .avatar-edit {
+    display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 8px 0;
+  }
+  #screen-edit .avatar-edit .big-av {
+    width: 72px; height: 72px; border-radius: 22px; background: var(--indigo-light);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px; font-weight: 700; color: var(--indigo); border: 3px solid #e2e8f0;
+  }
+  #screen-edit .avatar-edit span { font-size: 11px; color: var(--indigo); cursor: pointer; }
+
+  /* ════════════════════════════════
+     SCREEN: HISTORY
+  ════════════════════════════════ */
+  #screen-history .hist-body { padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; }
+  .hist-card {
+    background: #fff; border-radius: 12px; border: 1px solid #e2e8f0;
+    padding: 12px 14px; display: flex; gap: 10px; align-items: center;
+  }
+  .hist-card .hist-info { flex: 1; }
+  .hist-card .hi-title { font-size: 12px; font-weight: 600; color: #1e293b; }
+  .hist-card .hi-sub { font-size: 10px; color: #64748b; margin-top: 2px; }
+  .hist-card .hi-meta { display: flex; gap: 6px; align-items: center; margin-top: 5px; }
+  .hist-card .hi-price { font-size: 12px; font-weight: 700; }
+  .rate-btn {
+    padding: 5px 10px; border-radius: 8px; border: 1.5px solid var(--indigo);
+    font-size: 10px; font-weight: 600; color: var(--indigo); cursor: pointer; background: transparent; white-space: nowrap;
+  }
+
+  /* ════════════════════════════════
+     ANIMATIONS
+  ════════════════════════════════ */
+  .screen { animation: none; }
+  .screen.slide-in { animation: slideIn 0.25s ease; }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(16px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  /* ── No-bottom-nav screens ── */
+  .no-nav .bottom-nav { display: none; }
+  .no-nav .fab { display: none; }
+</style>
+</head>
+<body>
+
+<h1 class="site-title">Swappr — Interactive Demo</h1>
+<p class="site-sub">Service exchange & barter app · tap to navigate</p>
+
+<div class="phone-frame">
+  <div class="phone-notch"></div>
+  <div class="phone-screen" id="phone">
+
+    <!-- STATUS BAR -->
+    <div class="status-bar">
+      <span class="status-time">9:41</span>
+      <div class="status-icons">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1" fill="currentColor"/></svg>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="18" height="11" rx="2"/><path d="M22 11v4"/></svg>
+      </div>
+    </div>
+
+    <!-- ══ SCREEN: LOGIN ══ -->
+    <div class="screen active" id="screen-login">
+      <div class="screen-scroll">
+        <div class="hero">
+          <div class="hero-icon">🔄</div>
+          <h1>Swappr</h1>
+          <p>Exchange services. Pay or barter.</p>
+        </div>
+        <div class="form-area">
+          <div>
+            <span class="input-label">Email or phone</span>
+            <input class="input-field" type="text" placeholder="e.g. amina@email.com" value="amina@email.com">
+          </div>
+          <div>
+            <span class="input-label">Password</span>
+            <input class="input-field" type="password" placeholder="••••••••" value="password123">
+          </div>
+          <button class="btn-primary" onclick="navigate('home')">Sign in</button>
+          <div class="divider"><hr><span>or</span><hr></div>
+          <button class="btn-outline" onclick="navigate('register')">Create account</button>
+          <p style="text-align:center;font-size:11px;color:#94a3b8;margin-top:4px;">Forgot password?</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ SCREEN: REGISTER ══ -->
+    <div class="screen" id="screen-register">
+      <div class="top-bar">
+        <div class="back-btn" onclick="navigate('login')">
+          <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        </div>
+        <h2>Create account</h2>
+      </div>
+      <div class="screen-scroll">
+        <div class="form-area">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div>
+              <span class="input-label">First name</span>
+              <input class="input-field" placeholder="Amina">
+            </div>
+            <div>
+              <span class="input-label">Last name</span>
+              <input class="input-field" placeholder="Wanjiru">
+            </div>
+          </div>
+          <div>
+            <span class="input-label">Email</span>
+            <input class="input-field" type="email" placeholder="amina@email.com">
+          </div>
+          <div>
+            <span class="input-label">Phone (M-Pesa)</span>
+            <input class="input-field" placeholder="+254 7XX XXX XXX">
+          </div>
+          <div>
+            <span class="input-label">Location</span>
+            <input class="input-field" placeholder="Nairobi, Kenya">
+          </div>
+          <div>
+            <span class="input-label">Password</span>
+            <input class="input-field" type="password" placeholder="Min. 8 characters">
+          </div>
+          <div>
+            <span class="input-label">Skills (what can you offer?)</span>
+            <input class="input-field" placeholder="e.g. Graphic design, Tutoring">
+          </div>
+          <button class="btn-primary" onclick="navigate('home')">Create account →</button>
+          <p style="text-align:center;font-size:10px;color:#94a3b8;">Already have an account? <span style="color:#6366f1;cursor:pointer" onclick="navigate('login')">Sign in</span></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ SCREEN: HOME ══ -->
+    <div class="screen" id="screen-home">
+      <div class="screen-scroll">
+        <div class="home-header">
+          <p class="greet">Good morning 👋</p>
+          <p class="name">Amina Wanjiru</p>
+        </div>
+        <div class="search-wrap">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <span>Search services...</span>
+        </div>
+        <div class="home-body">
+          <div>
+            <div class="categories">
+              <div class="cat-chip active">All</div>
+              <div class="cat-chip">Design</div>
+              <div class="cat-chip">Tech</div>
+              <div class="cat-chip">Tutoring</div>
+              <div class="cat-chip">Cleaning</div>
+              <div class="cat-chip">Transport</div>
+            </div>
+          </div>
+          <div>
+            <div class="section-title">Trending services <span onclick="navigate('service')">See all</span></div>
+            <div class="services-grid">
+              <div class="service-card" onclick="navigate('service')">
+                <div class="service-card-img">🎨</div>
+                <div class="service-card-body">
+                  <div class="sc-title">Logo design</div>
+                  <div class="sc-user">by Brian K.</div>
+                  <div class="sc-bottom">
+                    <div class="sc-price">KES 500</div>
+                    <div class="stars">★ 4.8</div>
+                  </div>
+                </div>
+              </div>
+              <div class="service-card" onclick="navigate('service')">
+                <div class="service-card-img" style="background:#f0fdf4">📚</div>
+                <div class="service-card-body">
+                  <div class="sc-title">Math tutoring</div>
+                  <div class="sc-user">by Faith M.</div>
+                  <div class="sc-bottom">
+                    <div class="sc-price">Barter</div>
+                    <div class="stars">★ 4.9</div>
+                  </div>
+                </div>
+              </div>
+              <div class="service-card" onclick="navigate('service')">
+                <div class="service-card-img" style="background:#fff7ed">💻</div>
+                <div class="service-card-body">
+                  <div class="sc-title">Web dev</div>
+                  <div class="sc-user">by Lyon O.</div>
+                  <div class="sc-bottom">
+                    <div class="sc-price">KES 2,000</div>
+                    <div class="stars">★ 5.0</div>
+                  </div>
+                </div>
+              </div>
+              <div class="service-card" onclick="navigate('service')">
+                <div class="service-card-img" style="background:#fdf4ff">📷</div>
+                <div class="service-card-body">
+                  <div class="sc-title">Photography</div>
+                  <div class="sc-user">by Ciku N.</div>
+                  <div class="sc-bottom">
+                    <div class="sc-price">Both</div>
+                    <div class="stars">★ 4.7</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="section-title">Requests near you <span>Browse</span></div>
+            <div class="card" style="display:flex;flex-direction:column;gap:12px">
+              <div class="req-row" onclick="navigate('service')">
+                <div class="avatar teal">JO</div>
+                <div class="req-info">
+                  <div class="ri-title">Need plumber — Westlands</div>
+                  <div class="ri-sub">Barter: will offer translation services</div>
+                </div>
+                <div class="req-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+              </div>
+              <div style="border-top:1px solid #f1f5f9"></div>
+              <div class="req-row" onclick="navigate('service')">
+                <div class="avatar amber">SM</div>
+                <div class="req-info">
+                  <div class="ri-title">CV writing help needed</div>
+                  <div class="ri-sub">Pay: KES 300</div>
+                </div>
+                <div class="req-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+              </div>
+            </div>
+          </div>
+          <div style="height:10px"></div>
+        </div>
+      </div>
+      <div class="bottom-nav" id="bottom-nav-home">
+        <div class="nav-item active" onclick="navigate('home')">
+          <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          <span>Home</span>
+        </div>
+        <div class="nav-item" onclick="navigate('history')">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span>History</span>
+        </div>
+        <div class="nav-item" onclick="navigate('offer')">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          <span>Offer</span>
+        </div>
+        <div class="nav-item" onclick="navigate('notif')">
+          <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span>Alerts</span>
+        </div>
+        <div class="nav-item" onclick="navigate('profile')">
+          <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span>Profile</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ SCREEN: VIEW SERVICE ══ -->
+    <div class="screen" id="screen-service">
+      <div class="top-bar">
+        <div class="back-btn" onclick="navigate('home')">
+          <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        </div>
+        <h2>Service details</h2>
+        <div class="notif-badge">
+          <svg viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+        </div>
+      </div>
+      <div class="screen-scroll">
+        <div class="service-hero">🎨</div>
+        <div class="service-body">
+          <div>
+            <div style="display:flex;justify-content:space-between;align-items:flex-start">
+              <div>
+                <div style="font-size:17px;font-weight:700;color:#1e293b">Logo Design Service</div>
+                <div class="stars" style="font-size:12px;margin-top:3px">★★★★★ <span style="color:#64748b;font-size:10px">(42 reviews)</span></div>
+              </div>
+              <div style="text-align:right">
+                <div style="font-size:17px;font-weight:700;color:#6366f1">KES 500</div>
+                <span class="badge badge-teal">or Barter</span>
+              </div>
+            </div>
+          </div>
+          <div class="provider-row">
+            <div class="avatar">BK</div>
+            <div class="prov-info">
+              <div class="prov-name">Brian Kamau</div>
+              <div class="prov-meta">⭐ 4.8 · 42 jobs · Nairobi</div>
+            </div>
+            <span class="badge badge-green">✓ Verified</span>
+          </div>
+          <div>
+            <div style="font-size:12px;font-weight:700;color:#1e293b;margin-bottom:6px">About this service</div>
+            <div style="font-size:11px;color:#475569;line-height:1.6">Professional logo design tailored to your brand. Includes 3 concepts, unlimited revisions, and final files in PNG, SVG, and PDF. Delivery in 48 hours.</div>
+          </div>
+          <div>
+            <div style="font-size:12px;font-weight:700;color:#1e293b;margin-bottom:8px">Status timeline</div>
+            <div class="timeline">
+              <div class="tl-item">
+                <div class="tl-left"><div class="tl-dot done"></div><div class="tl-line"></div></div>
+                <div class="tl-body"><div class="tl-title">Request sent</div><div class="tl-sub">Aug 10 · 9:00 AM</div></div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-left"><div class="tl-dot active"></div><div class="tl-line"></div></div>
+                <div class="tl-body"><div class="tl-title">Provider accepted</div><div class="tl-sub">Aug 10 · 11:30 AM</div></div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-left"><div class="tl-dot pending"></div><div class="tl-line"></div></div>
+                <div class="tl-body"><div class="tl-title">In progress</div><div class="tl-sub">Estimated Aug 12</div></div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-left"><div class="tl-dot pending"></div></div>
+                <div class="tl-body"><div class="tl-title">Completed & rated</div><div class="tl-sub">—</div></div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:12px;font-weight:700;color:#1e293b;margin-bottom:8px">Reviews</div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div class="review-item">
+                <div class="avatar" style="width:30px;height:30px;font-size:11px;border-radius:9px">AM</div>
+                <div class="rev-info">
+                  <div class="rev-name">Alice M. <span class="stars">★★★★★</span></div>
+                  <div class="rev-text">Quick turnaround, exactly what I needed!</div>
+                </div>
+              </div>
+              <div class="review-item">
+                <div class="avatar teal" style="width:30px;height:30px;font-size:11px;border-radius:9px">JO</div>
+                <div class="rev-info">
+                  <div class="rev-name">James O. <span class="stars">★★★★☆</span></div>
+                  <div class="rev-text">Great work, delivered on time. Recommended!</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="action-row">
+            <button class="btn-outline" style="font-size:12px;padding:11px" onclick="navigate('notif')">Propose Barter</button>
+            <button class="btn-primary" style="font-size:12px" onclick="navigate('notif')">Request — KES 500</button>
+          </div>
+          <div style="height:10px"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ SCREEN: OFFER / CREATE SERVICE ══ -->
+    <div class="screen" id="screen-offer">
+      <div class="top-bar">
+        <div class="back-btn" onclick="navigate('home')">
+          <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        </div>
+        <h2>Post a service</h2>
+      </div>
+      <div class="screen-scroll">
+        <div class="form-area">
+          <div>
+            <span class="input-label">Listing type</span>
+            <div class="type-toggle">
+              <div class="type-btn active" id="type-offer">🛠 Offer service</div>
+              <div class="type-btn" id="type-request" onclick="toggleType()">🙋 Request help</div>
+            </div>
+          </div>
+          <div>
+            <span class="input-label">Service icon</span>
+            <div class="emoji-picker">
+              <div class="ep active">🎨</div>
+              <div class="ep">💻</div>
+              <div class="ep">📚</div>
+              <div class="ep">🔧</div>
+              <div class="ep">📷</div>
+              <div class="ep">🚗</div>
+              <div class="ep">🍽</div>
+              <div class="ep">✂️</div>
+            </div>
+          </div>
+          <div>
+            <span class="input-label">Service title</span>
+            <input class="input-field" placeholder="e.g. Logo design, Math tutoring">
+          </div>
+          <div>
+            <span class="input-label">Description</span>
+            <textarea class="input-field" rows="3" placeholder="Describe what you offer, delivery time, requirements..." style="resize:none;font-family:inherit"></textarea>
+          </div>
+          <div>
+            <span class="input-label">Category</span>
+            <select class="input-field" style="cursor:pointer">
+              <option>Design & Creative</option>
+              <option>Tech & Development</option>
+              <option>Education & Tutoring</option>
+              <option>Home & Repairs</option>
+              <option>Transport</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div>
+            <span class="input-label">Exchange type</span>
+            <div class="type-toggle">
+              <div class="type-btn active">💳 Pay (KES)</div>
+              <div class="type-btn">🔄 Barter</div>
+              <div class="type-btn">Both</div>
+            </div>
+          </div>
+          <div>
+            <span class="input-label">Price (KES) — leave empty if barter only</span>
+            <input class="input-field" type="number" placeholder="e.g. 500">
+          </div>
+          <div>
+            <span class="input-label">If barter — what do you want in return?</span>
+            <input class="input-field" placeholder="e.g. Photography session, tutoring hours">
+          </div>
+          <button class="btn-primary" onclick="navigate('notif')">Publish listing →</button>
+          <div style="height:10px"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ SCREEN: NOTIFICATIONS + STATUS ══ -->
+    <div class="screen" id="screen-notif">
+      <div class="top-bar">
+        <div class="back-btn" onclick="navigate('home')">
+          <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        </div>
+        <h2>Notifications</h2>
+      </div>
+      <div class="screen-scroll">
+        <div class="notif-body">
+          <div style="font-size:11px;font-weight:700;color:#94a3b8;padding:4px 0 2px">NEW</div>
+          <div class="notif-item unread">
+            <div class="notif-icon blue">🔄</div>
+            <div class="notif-text">
+              <div class="nt-title">Barter request received</div>
+              <div class="nt-sub">James O. wants to swap Plumbing for your Logo design</div>
+              <div class="nt-time">2 min ago</div>
+            </div>
+            <div class="unread-dot"></div>
+          </div>
+          <div class="notif-item unread">
+            <div class="notif-icon green">✅</div>
+            <div class="notif-text">
+              <div class="nt-title">Service request accepted</div>
+              <div class="nt-sub">Brian accepted your logo design request</div>
+              <div class="nt-time">1 hr ago</div>
+            </div>
+            <div class="unread-dot"></div>
+          </div>
+
+          <div style="font-size:11px;font-weight:700;color:#94a3b8;padding:8px 0 2px">EARLIER</div>
+          <div class="notif-item">
+            <div class="notif-icon amber">⏳</div>
+            <div class="notif-text">
+              <div class="nt-title">Request pending</div>
+              <div class="nt-sub">Your CV writing request is waiting for a provider</div>
+              <div class="nt-time">Yesterday</div>
+            </div>
+          </div>
+          <div class="notif-item">
+            <div class="notif-icon green">💳</div>
+            <div class="notif-text">
+              <div class="nt-title">Payment received</div>
+              <div class="nt-sub">KES 500 from Alice M. for tutoring session</div>
+              <div class="nt-time">Aug 9</div>
+            </div>
+          </div>
+          <div class="notif-item">
+            <div class="notif-icon blue">⭐</div>
+            <div class="notif-text">
+              <div class="nt-title">New review</div>
+              <div class="nt-sub">Alice M. left you a 5-star rating</div>
+              <div class="nt-time">Aug 8</div>
+            </div>
+          </div>
+          <div class="notif-item">
+            <div class="notif-icon amber">🔔</div>
+            <div class="notif-text">
+              <div class="nt-title">Reminder</div>
+              <div class="nt-sub">Your web dev service expires in 3 days — renew?</div>
+              <div class="nt-time">Aug 7</div>
+            </div>
+          </div>
+
+          <div style="font-size:11px;font-weight:700;color:#94a3b8;padding:8px 0 6px">REQUEST STATUS</div>
+          <div class="card">
+            <div style="font-size:12px;font-weight:700;color:#1e293b;margin-bottom:12px">Logo design — Brian K.</div>
+            <div class="timeline">
+              <div class="tl-item">
+                <div class="tl-left"><div class="tl-dot done"></div><div class="tl-line"></div></div>
+                <div class="tl-body"><div class="tl-title">Submitted</div><div class="tl-sub">Aug 10, 9:00 AM</div></div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-left"><div class="tl-dot done"></div><div class="tl-line"></div></div>
+                <div class="tl-body"><div class="tl-title">Accepted</div><div class="tl-sub">Aug 10, 11:30 AM</div></div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-left"><div class="tl-dot active"></div><div class="tl-line"></div></div>
+                <div class="tl-body"><div class="tl-title">In progress</div><div class="tl-sub">Est. Aug 12</div></div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-left"><div class="tl-dot pending"></div></div>
+                <div class="tl-body"><div class="tl-title">Complete</div><div class="tl-sub">—</div></div>
+              </div>
+            </div>
+          </div>
+          <div style="height:10px"></div>
+        </div>
+      </div>
+      <div class="bottom-nav">
+        <div class="nav-item" onclick="navigate('home')">
+          <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          <span>Home</span>
+        </div>
+        <div class="nav-item" onclick="navigate('history')">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span>History</span>
+        </div>
+        <div class="nav-item" onclick="navigate('offer')">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          <span>Offer</span>
+        </div>
+        <div class="nav-item active" onclick="navigate('notif')">
+          <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span>Alerts</span>
+        </div>
+        <div class="nav-item" onclick="navigate('profile')">
+          <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span>Profile</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ SCREEN: PROFILE ══ -->
+    <div class="screen" id="screen-profile">
+      <div class="screen-scroll">
+        <div class="profile-hero">
+          <div class="profile-avatar">AW</div>
+          <h2>Amina Wanjiru</h2>
+          <p>Nairobi, Kenya · Graphic Designer</p>
+          <div class="edit-btn" onclick="navigate('edit')">✏️ Edit profile</div>
+        </div>
+        <div class="stats-row">
+          <div class="stat-cell"><div class="stat-num">12</div><div class="stat-label">Services done</div></div>
+          <div class="stat-cell"><div class="stat-num">4.9</div><div class="stat-label">Avg rating</div></div>
+          <div class="stat-cell"><div class="stat-num">8</div><div class="stat-label">Swaps</div></div>
+        </div>
+        <div class="profile-body">
+          <div style="height:6px"></div>
+          <div class="menu-row" onclick="navigate('history')">
+            <div class="mr-icon" style="background:#eef2ff">📋</div>
+            <div class="mr-text">Service history</div>
+            <div class="mr-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+          </div>
+          <div class="menu-row" onclick="navigate('offer')">
+            <div class="mr-icon" style="background:#f0fdf4">🛠</div>
+            <div class="mr-text">My listings</div>
+            <div class="mr-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+          </div>
+          <div class="menu-row" onclick="navigate('notif')">
+            <div class="mr-icon" style="background:#fff7ed">⭐</div>
+            <div class="mr-text">My reviews</div>
+            <div class="mr-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+          </div>
+          <div class="menu-row">
+            <div class="mr-icon" style="background:#f0fdfa">💳</div>
+            <div class="mr-text">Payment methods</div>
+            <div class="mr-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+          </div>
+          <div class="menu-row">
+            <div class="mr-icon" style="background:#fdf4ff">🔒</div>
+            <div class="mr-text">Privacy & security</div>
+            <div class="mr-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+          </div>
+          <div class="menu-row" onclick="navigate('login')">
+            <div class="mr-icon" style="background:#fef2f2">🚪</div>
+            <div class="mr-text" style="color:#ef4444">Sign out</div>
+            <div class="mr-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+          </div>
+          <div style="height:10px"></div>
+        </div>
+      </div>
+      <div class="bottom-nav">
+        <div class="nav-item" onclick="navigate('home')">
+          <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          <span>Home</span>
+        </div>
+        <div class="nav-item" onclick="navigate('history')">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span>History</span>
+        </div>
+        <div class="nav-item" onclick="navigate('offer')">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          <span>Offer</span>
+        </div>
+        <div class="nav-item" onclick="navigate('notif')">
+          <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span>Alerts</span>
+        </div>
+        <div class="nav-item active" onclick="navigate('profile')">
+          <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span>Profile</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ SCREEN: EDIT PROFILE ══ -->
+    <div class="screen" id="screen-edit">
+      <div class="top-bar">
+        <div class="back-btn" onclick="navigate('profile')">
+          <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        </div>
+        <h2>Edit profile</h2>
+      </div>
+      <div class="screen-scroll">
+        <div class="form-area">
+          <div class="avatar-edit">
+            <div class="big-av">AW</div>
+            <span>Change photo</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div>
+              <span class="input-label">First name</span>
+              <input class="input-field" value="Amina">
+            </div>
+            <div>
+              <span class="input-label">Last name</span>
+              <input class="input-field" value="Wanjiru">
+            </div>
+          </div>
+          <div>
+            <span class="input-label">Bio</span>
+            <textarea class="input-field" rows="3" style="resize:none;font-family:inherit">Graphic designer & illustrator based in Nairobi. I love barter!</textarea>
+          </div>
+          <div>
+            <span class="input-label">Location</span>
+            <input class="input-field" value="Nairobi, Kenya">
+          </div>
+          <div>
+            <span class="input-label">Phone (M-Pesa)</span>
+            <input class="input-field" value="+254 712 345 678">
+          </div>
+          <div>
+            <span class="input-label">Skills</span>
+            <input class="input-field" value="Logo design, Illustration, Branding">
+          </div>
+          <div>
+            <span class="input-label">Languages</span>
+            <input class="input-field" value="English, Swahili">
+          </div>
+          <button class="btn-primary" onclick="navigate('profile')">Save changes</button>
+          <div style="height:10px"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ SCREEN: HISTORY ══ -->
+    <div class="screen" id="screen-history">
+      <div class="top-bar">
+        <div class="back-btn" onclick="navigate('profile')">
+          <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        </div>
+        <h2>History</h2>
+      </div>
+      <div class="screen-scroll">
+        <div class="hist-body">
+          <div style="display:flex;gap:8px;margin-bottom:4px">
+            <div class="cat-chip active">All</div>
+            <div class="cat-chip">Provided</div>
+            <div class="cat-chip">Received</div>
+            <div class="cat-chip">Swaps</div>
+          </div>
+
+          <div class="hist-card">
+            <div class="avatar">BK</div>
+            <div class="hist-info">
+              <div class="hi-title">Logo design — Brian K.</div>
+              <div class="hi-sub">Provided by you · Aug 5</div>
+              <div class="hi-meta">
+                <span class="badge badge-green">Completed</span>
+                <div class="stars" style="font-size:11px">★★★★★</div>
+              </div>
+            </div>
+            <div class="hi-price" style="color:#16a34a">+KES 500</div>
+          </div>
+
+          <div class="hist-card">
+            <div class="avatar teal">JO</div>
+            <div class="hist-info">
+              <div class="hi-title">Math tutoring ↔ Plumbing</div>
+              <div class="hi-sub">Swap with James O. · Aug 3</div>
+              <div class="hi-meta">
+                <span class="badge badge-teal">Barter</span>
+                <div class="stars" style="font-size:11px">★★★★☆</div>
+              </div>
+            </div>
+            <button class="rate-btn">Rate</button>
+          </div>
+
+          <div class="hist-card">
+            <div class="avatar amber">SM</div>
+            <div class="hist-info">
+              <div class="hi-title">CV writing — Sara M.</div>
+              <div class="hi-sub">Received · Jul 28</div>
+              <div class="hi-meta">
+                <span class="badge badge-green">Completed</span>
+                <div class="stars" style="font-size:11px">★★★★★</div>
+              </div>
+            </div>
+            <div class="hi-price" style="color:#ef4444">−KES 300</div>
+          </div>
+
+          <div class="hist-card">
+            <div class="avatar">CN</div>
+            <div class="hist-info">
+              <div class="hi-title">Photography session</div>
+              <div class="hi-sub">Provided by you · Jul 20</div>
+              <div class="hi-meta">
+                <span class="badge badge-amber">Pending rating</span>
+              </div>
+            </div>
+            <button class="rate-btn">Rate</button>
+          </div>
+
+          <div class="hist-card">
+            <div class="avatar teal">FM</div>
+            <div class="hist-info">
+              <div class="hi-title">Web dev consultation</div>
+              <div class="hi-sub">Provided by you · Jul 15</div>
+              <div class="hi-meta">
+                <span class="badge badge-green">Completed</span>
+                <div class="stars" style="font-size:11px">★★★★★</div>
+              </div>
+            </div>
+            <div class="hi-price" style="color:#16a34a">+KES 2,000</div>
+          </div>
+
+          <div style="height:10px"></div>
+        </div>
+      </div>
+      <div class="bottom-nav">
+        <div class="nav-item" onclick="navigate('home')">
+          <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          <span>Home</span>
+        </div>
+        <div class="nav-item active" onclick="navigate('history')">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span>History</span>
+        </div>
+        <div class="nav-item" onclick="navigate('offer')">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          <span>Offer</span>
+        </div>
+        <div class="nav-item" onclick="navigate('notif')">
+          <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span>Alerts</span>
+        </div>
+        <div class="nav-item" onclick="navigate('profile')">
+          <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span>Profile</span>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /phone-screen -->
+</div><!-- /phone-frame -->
+
+<p style="font-size:11px;color:#94a3b8;margin-top:16px;text-align:center">10 screens · tap any element to navigate</p>
+
+<script>
+const SCREENS = ['login','register','home','service','offer','notif','profile','edit','history'];
+const NO_STATUS = ['login','register'];
+const NO_NAV_SCREENS = ['login','register','service','offer','edit'];
+
+function navigate(id) {
+  SCREENS.forEach(s => {
+    const el = document.getElementById('screen-' + s);
+    if (el) { el.classList.remove('active'); el.classList.remove('slide-in'); }
+  });
+  const target = document.getElementById('screen-' + id);
+  if (!target) return;
+  target.classList.add('active');
+  requestAnimationFrame(() => target.classList.add('slide-in'));
+  // scroll to top
+  const scroll = target.querySelector('.screen-scroll');
+  if (scroll) scroll.scrollTop = 0;
+  // status bar
+  const sb = document.querySelector('.status-bar');
+  sb.style.display = NO_STATUS.includes(id) ? 'none' : 'flex';
+}
+
+function toggleType() {
+  const offer = document.getElementById('type-offer');
+  const req = document.getElementById('type-request');
+  offer.classList.toggle('active');
+  req.classList.toggle('active');
+}
+</script>
+</body>
+</html>
