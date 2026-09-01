@@ -74,7 +74,7 @@
     z-index: 5;
   }
   .status-time { font-size: 12px; font-weight: 600; color: #1e293b; }
-  .status-icons { display: flex; gap: 5px; align-items: center; font-size: 11px; color: #64748b; }
+  .status-icons { display: flex; gap: 5px; align-items: center; font-size: 11px; color: #64748b; height: 14px; }
 
   /* ── Screens ── */
   .screen {
@@ -113,8 +113,8 @@
   }
   .nav-item svg { width: 22px; height: 22px; stroke: #94a3b8; stroke-width: 1.8; fill: none; transition: stroke 0.15s; }
   .nav-item span { font-size: 9px; color: #94a3b8; transition: color 0.15s; }
-  .nav-item.active svg { stroke: #6366f1; }
-  .nav-item.active span { color: #6366f1; }
+  .nav-item.active svg { stroke: var(--blue); }
+  .nav-item.active span { color: var(--blue); }
 
   /* ── Top bar ── */
   .top-bar {
@@ -130,14 +130,13 @@
   .top-bar .back-btn {
     width: 28px; height: 28px; background: #f1f5f9; border-radius: 8px;
     display: flex; align-items: center; justify-content: center; cursor: pointer;
+    font-weight: bold; color: #475569; font-size: 16px;
   }
-  .top-bar .back-btn svg { width: 16px; height: 16px; stroke: #475569; stroke-width: 2; fill: none; }
   .notif-badge {
     width: 28px; height: 28px; background: #f1f5f9; border-radius: 8px;
     display: flex; align-items: center; justify-content: center; cursor: pointer;
     position: relative;
   }
-  .notif-badge svg { width: 16px; height: 16px; stroke: #475569; stroke-width: 2; fill: none; }
   .notif-dot {
     position: absolute; top: 5px; right: 5px;
     width: 7px; height: 7px; background: #ef4444; border-radius: 50%;
@@ -146,9 +145,9 @@
 
   /* ── Colours ── */
   :root {
-    --indigo: #6366f1;
-    --indigo-light: #eef2ff;
-    --indigo-dark: #4338ca;
+    --blue: #2563eb;
+    --blue-light: #eff6ff;
+    --blue-dark: #1d4ed8;
     --teal: #0d9488;
     --teal-light: #f0fdfa;
     --amber: #d97706;
@@ -163,15 +162,15 @@
 
   /* ── Common components ── */
   .btn-primary {
-    width: 100%; padding: 13px; background: var(--indigo);
+    width: 100%; padding: 13px; background: var(--blue);
     color: #fff; border: none; border-radius: 12px;
     font-size: 14px; font-weight: 600; cursor: pointer;
     transition: background 0.15s;
   }
-  .btn-primary:active { background: var(--indigo-dark); }
+  .btn-primary:active { background: var(--blue-dark); }
   .btn-outline {
     width: 100%; padding: 12px; background: transparent;
-    color: var(--indigo); border: 1.5px solid var(--indigo); border-radius: 12px;
+    color: var(--blue); border: 1.5px solid var(--blue); border-radius: 12px;
     font-size: 14px; font-weight: 600; cursor: pointer;
   }
   .btn-teal {
@@ -185,14 +184,14 @@
     border-radius: 10px; font-size: 13px; color: #1e293b;
     outline: none; transition: border-color 0.15s;
   }
-  .input-field:focus { border-color: var(--indigo); background: #fff; }
+  .input-field:focus { border-color: var(--blue); background: #fff; }
   .input-label { font-size: 11px; font-weight: 600; color: #475569; margin-bottom: 5px; display: block; }
 
   .badge {
     display: inline-block; padding: 3px 8px;
     border-radius: 99px; font-size: 10px; font-weight: 600;
   }
-  .badge-indigo { background: var(--indigo-light); color: var(--indigo); }
+  .badge-blue   { background: var(--blue-light); color: var(--blue); }
   .badge-teal   { background: var(--teal-light); color: var(--teal); }
   .badge-amber  { background: var(--amber-light); color: var(--amber); }
   .badge-green  { background: var(--green-light); color: var(--green); }
@@ -205,8 +204,8 @@
   }
   .avatar {
     width: 40px; height: 40px; border-radius: 12px;
-    background: var(--indigo-light); display: flex; align-items: center;
-    justify-content: center; font-size: 14px; font-weight: 700; color: var(--indigo);
+    background: var(--blue-light); display: flex; align-items: center;
+    justify-content: center; font-size: 14px; font-weight: 700; color: var(--blue);
     flex-shrink: 0;
   }
   .avatar.teal { background: var(--teal-light); color: var(--teal); }
@@ -218,25 +217,24 @@
   .fab {
     position: absolute; bottom: 80px; right: 18px;
     width: 50px; height: 50px;
-    background: var(--indigo); border-radius: 16px;
+    background: var(--blue); border-radius: 16px;
     display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 4px 16px rgba(99,102,241,0.4);
+    box-shadow: 0 4px 16px rgba(37, 99, 235, 0.4);
     cursor: pointer; z-index: 20;
   }
-  .fab svg { width: 22px; height: 22px; stroke: #fff; stroke-width: 2.5; fill: none; }
 
   /* ════════════════════════════════
      SCREEN: LOGIN
   ════════════════════════════════ */
   #screen-login .hero {
-    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
     padding: 40px 24px 32px;
     text-align: center;
   }
   #screen-login .hero-icon {
     width: 64px; height: 64px; background: rgba(255,255,255,0.2);
     border-radius: 20px; display: flex; align-items: center; justify-content: center;
-    margin: 0 auto 16px; font-size: 28px;
+    margin: 0 auto 16px;
   }
   #screen-login .hero h1 { font-size: 22px; font-weight: 700; color: #fff; }
   #screen-login .hero p { font-size: 12px; color: rgba(255,255,255,0.8); margin-top: 4px; }
@@ -254,7 +252,7 @@
      SCREEN: HOME
   ════════════════════════════════ */
   #screen-home .home-header {
-    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
     padding: 16px 16px 24px;
   }
   #screen-home .home-header .greet { font-size: 12px; color: rgba(255,255,255,0.75); margin-bottom: 2px; }
@@ -266,34 +264,32 @@
     display: flex; align-items: center; padding: 10px 14px; gap: 8px;
     box-shadow: 0 4px 16px rgba(0,0,0,0.08);
   }
-  #screen-home .search-wrap svg { width: 16px; height: 16px; stroke: #94a3b8; fill: none; stroke-width: 2; flex-shrink: 0; }
   #screen-home .search-wrap span { font-size: 12px; color: #94a3b8; }
   #screen-home .home-body { padding: 18px 16px; display: flex; flex-direction: column; gap: 20px; }
   #screen-home .section-title {
     font-size: 13px; font-weight: 700; color: #1e293b; margin-bottom: 10px;
     display: flex; justify-content: space-between; align-items: center;
   }
-  #screen-home .section-title span { font-size: 11px; font-weight: 500; color: var(--indigo); cursor: pointer; }
   .service-card {
     background: #fff; border-radius: 14px; border: 1px solid #e2e8f0;
     overflow: hidden; cursor: pointer;
   }
   .service-card-img {
-    height: 80px; background: var(--indigo-light);
-    display: flex; align-items: center; justify-content: center; font-size: 30px;
+    height: 80px; background: var(--blue-light); color: var(--blue);
+    display: flex; align-items: center; justify-content: center;
   }
   .service-card-body { padding: 10px 12px; }
   .service-card-body .sc-title { font-size: 12px; font-weight: 600; color: #1e293b; }
   .service-card-body .sc-user { font-size: 10px; color: #64748b; margin-top: 1px; }
   .service-card-body .sc-bottom { display: flex; justify-content: space-between; align-items: center; margin-top: 6px; }
-  .service-card-body .sc-price { font-size: 12px; font-weight: 700; color: var(--indigo); }
+  .service-card-body .sc-price { font-size: 12px; font-weight: 700; color: var(--blue); }
   .services-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
   .req-row { display: flex; align-items: center; gap: 10px; cursor: pointer; }
   .req-row .req-info { flex: 1; }
   .req-row .req-info .ri-title { font-size: 12px; font-weight: 600; color: #1e293b; }
   .req-row .req-info .ri-sub { font-size: 10px; color: #64748b; margin-top: 1px; }
-  .req-row .req-arrow svg { width: 14px; height: 14px; stroke: #cbd5e1; stroke-width: 2; fill: none; }
+  .req-row .req-arrow { width: 14px; height: 14px; }
 
   .categories { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
   .categories::-webkit-scrollbar { display: none; }
@@ -302,22 +298,22 @@
     background: #fff; border: 1px solid #e2e8f0;
     border-radius: 99px; font-size: 11px; font-weight: 500; color: #475569; cursor: pointer;
   }
-  .cat-chip.active { background: var(--indigo); color: #fff; border-color: var(--indigo); }
+  .cat-chip.active { background: var(--blue); color: #fff; border-color: var(--blue); }
 
   /* ════════════════════════════════
      SCREEN: VIEW SERVICE
   ════════════════════════════════ */
   #screen-service .service-hero {
-    height: 160px; background: var(--indigo-light);
-    display: flex; align-items: center; justify-content: center; font-size: 56px; flex-shrink: 0;
+    height: 160px; background: var(--blue-light); color: var(--blue);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
   }
   #screen-service .service-body { padding: 16px; display: flex; flex-direction: column; gap: 14px; }
   #screen-service .provider-row { display: flex; align-items: center; gap: 10px; }
   #screen-service .provider-row .prov-info { flex: 1; }
   #screen-service .provider-row .prov-name { font-size: 13px; font-weight: 600; color: #1e293b; }
-  #screen-service .provider-row .prov-meta { font-size: 10px; color: #64748b; }
+  #screen-service .provider-row .prov-meta { font-size: 10px; color: #64748b; display: flex; align-items: center; gap: 3px;}
   .review-item { display: flex; gap: 10px; }
-  .review-item .rev-info .rev-name { font-size: 11px; font-weight: 600; color: #1e293b; }
+  .review-item .rev-info .rev-name { font-size: 11px; font-weight: 600; color: #1e293b; display: flex; align-items: center; gap: 4px;}
   .review-item .rev-info .rev-text { font-size: 10px; color: #64748b; margin-top: 2px; }
   .action-row { display: flex; gap: 8px; }
   .action-row button { flex: 1; }
@@ -332,53 +328,40 @@
     font-size: 12px; font-weight: 600; color: #475569; cursor: pointer;
     text-align: center; background: #fff; transition: all 0.15s;
   }
-  .type-btn.active { border-color: var(--indigo); background: var(--indigo-light); color: var(--indigo); }
+  .type-btn.active { border-color: var(--blue); background: var(--blue-light); color: var(--blue); }
   .emoji-picker { display: flex; gap: 10px; flex-wrap: wrap; }
-  .ep { width: 38px; height: 38px; border-radius: 10px; background: #f1f5f9;
-    display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; border: 2px solid transparent; }
-  .ep.active { border-color: var(--indigo); background: var(--indigo-light); }
+  .ep { width: 38px; height: 38px; border-radius: 10px; background: #f1f5f9; color: var(--blue);
+    display: flex; align-items: center; justify-content: center; cursor: pointer; border: 2px solid transparent; }
+  .ep.active { border-color: var(--blue); background: var(--blue-light); }
 
   /* ════════════════════════════════
-     SCREEN: NOTIFICATIONS + STATUS
+     SCREEN: NOTIFICATIONS
   ════════════════════════════════ */
   #screen-notif .notif-body { padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; }
   .notif-item {
     background: #fff; border-radius: 12px; border: 1px solid #e2e8f0;
     padding: 12px 14px; display: flex; align-items: flex-start; gap: 10px;
   }
-  .notif-item.unread { background: #fafaff; border-color: #c7d2fe; }
+  .notif-item.unread { background: #eff6ff; border-color: #bfdbfe; }
   .notif-icon {
     width: 34px; height: 34px; border-radius: 10px; flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center; font-size: 15px;
+    display: flex; align-items: center; justify-content: center; color: var(--blue);
   }
-  .notif-icon.blue { background: var(--indigo-light); }
-  .notif-icon.green { background: var(--green-light); }
-  .notif-icon.amber { background: var(--amber-light); }
-  .notif-icon.red { background: var(--red-light); }
+  .notif-icon.blue { background: var(--blue-light); color: var(--blue); }
+  .notif-icon.green { background: var(--green-light); color: var(--green); }
+  .notif-icon.amber { background: var(--amber-light); color: var(--amber); }
+  .notif-icon.red { background: var(--red-light); color: var(--red); }
   .notif-text { flex: 1; }
   .notif-text .nt-title { font-size: 12px; font-weight: 600; color: #1e293b; }
   .notif-text .nt-sub { font-size: 10px; color: #64748b; margin-top: 2px; }
   .notif-text .nt-time { font-size: 9px; color: #94a3b8; margin-top: 4px; }
-  .unread-dot { width: 7px; height: 7px; background: var(--indigo); border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
-
-  .timeline { display: flex; flex-direction: column; gap: 0; }
-  .tl-item { display: flex; gap: 10px; padding-bottom: 14px; }
-  .tl-item:last-child { padding-bottom: 0; }
-  .tl-left { display: flex; flex-direction: column; align-items: center; }
-  .tl-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
-  .tl-dot.done { background: var(--green); }
-  .tl-dot.active { background: var(--indigo); box-shadow: 0 0 0 3px rgba(99,102,241,0.2); }
-  .tl-dot.pending { background: #e2e8f0; }
-  .tl-line { width: 2px; flex: 1; background: #e2e8f0; margin-top: 3px; }
-  .tl-body { flex: 1; }
-  .tl-body .tl-title { font-size: 12px; font-weight: 600; color: #1e293b; }
-  .tl-body .tl-sub { font-size: 10px; color: #64748b; margin-top: 2px; }
+  .unread-dot { width: 7px; height: 7px; background: var(--blue); border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
 
   /* ════════════════════════════════
      SCREEN: PROFILE
   ════════════════════════════════ */
   #screen-profile .profile-hero {
-    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
     padding: 20px 16px 32px; text-align: center;
   }
   #screen-profile .profile-avatar {
@@ -412,10 +395,10 @@
   }
   .menu-row .mr-icon {
     width: 32px; height: 32px; border-radius: 9px; display: flex; align-items: center;
-    justify-content: center; font-size: 14px; flex-shrink: 0;
+    justify-content: center; flex-shrink: 0; color: var(--blue);
   }
   .menu-row .mr-text { flex: 1; font-size: 13px; font-weight: 500; color: #1e293b; }
-  .menu-row .mr-arrow svg { width: 14px; height: 14px; stroke: #cbd5e1; stroke-width: 2; fill: none; }
+  .menu-row .mr-arrow { width: 14px; height: 14px; }
 
   /* ════════════════════════════════
      SCREEN: EDIT PROFILE
@@ -425,11 +408,11 @@
     display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 8px 0;
   }
   #screen-edit .avatar-edit .big-av {
-    width: 72px; height: 72px; border-radius: 22px; background: var(--indigo-light);
+    width: 72px; height: 72px; border-radius: 22px; background: var(--blue-light);
     display: flex; align-items: center; justify-content: center;
-    font-size: 26px; font-weight: 700; color: var(--indigo); border: 3px solid #e2e8f0;
+    font-size: 26px; font-weight: 700; color: var(--blue); border: 3px solid #e2e8f0;
   }
-  #screen-edit .avatar-edit span { font-size: 11px; color: var(--indigo); cursor: pointer; }
+  #screen-edit .avatar-edit span { font-size: 11px; color: var(--blue); cursor: pointer; }
 
   /* ════════════════════════════════
      SCREEN: HISTORY
@@ -445,8 +428,8 @@
   .hist-card .hi-meta { display: flex; gap: 6px; align-items: center; margin-top: 5px; }
   .hist-card .hi-price { font-size: 12px; font-weight: 700; }
   .rate-btn {
-    padding: 5px 10px; border-radius: 8px; border: 1.5px solid var(--indigo);
-    font-size: 10px; font-weight: 600; color: var(--indigo); cursor: pointer; background: transparent; white-space: nowrap;
+    padding: 5px 10px; border-radius: 8px; border: 1.5px solid var(--blue);
+    font-size: 10px; font-weight: 600; color: var(--blue); cursor: pointer; background: transparent; white-space: nowrap;
   }
 
   /* ════════════════════════════════
@@ -466,7 +449,7 @@
 </head>
 <body>
 
-<h1 class="site-title">Swappr — Interactive Demo</h1>
+<h1 class="site-title">Interactive Demo</h1>
 <p class="site-sub">Service exchange & barter app · tap to navigate</p>
 
 <div class="phone-frame">
@@ -476,18 +459,15 @@
     <!-- STATUS BAR -->
     <div class="status-bar">
       <span class="status-time">9:41</span>
-      <div class="status-icons">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1" fill="currentColor"/></svg>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="18" height="11" rx="2"/><path d="M22 11v4"/></svg>
-      </div>
+      <div class="status-icons"></div>
     </div>
 
     <!-- ══ SCREEN: LOGIN ══ -->
     <div class="screen active" id="screen-login">
       <div class="screen-scroll">
         <div class="hero">
-          <div class="hero-icon">🔄</div>
-          <h1>Swappr</h1>
+          <div class="hero-icon"></div>
+          <h1>Swapper</h1>
           <p>Exchange services. Pay or barter.</p>
         </div>
         <div class="form-area">
@@ -510,9 +490,7 @@
     <!-- ══ SCREEN: REGISTER ══ -->
     <div class="screen" id="screen-register">
       <div class="top-bar">
-        <div class="back-btn" onclick="navigate('login')">
-          <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-        </div>
+        <div class="back-btn" onclick="navigate('login')">&lt;</div>
         <h2>Create account</h2>
       </div>
       <div class="screen-scroll">
@@ -548,7 +526,7 @@
             <input class="input-field" placeholder="e.g. Graphic design, Tutoring">
           </div>
           <button class="btn-primary" onclick="navigate('home')">Create account →</button>
-          <p style="text-align:center;font-size:10px;color:#94a3b8;">Already have an account? <span style="color:#6366f1;cursor:pointer" onclick="navigate('login')">Sign in</span></p>
+          <p style="text-align:center;font-size:10px;color:#94a3b8;">Already have an account? <span style="color:#2563eb;cursor:pointer" onclick="navigate('login')">Sign in</span></p>
         </div>
       </div>
     </div>
@@ -557,75 +535,107 @@
     <div class="screen" id="screen-home">
       <div class="screen-scroll">
         <div class="home-header">
-          <p class="greet">Good morning 👋</p>
+          <p class="greet">Good morning</p>
           <p class="name">Amina Wanjiru</p>
         </div>
         <div class="search-wrap">
-          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
           <span>Search services...</span>
         </div>
         <div class="home-body">
           <div>
-            <div class="categories">
-              <div class="cat-chip active">All</div>
-              <div class="cat-chip">Design</div>
-              <div class="cat-chip">Tech</div>
-              <div class="cat-chip">Tutoring</div>
-              <div class="cat-chip">Cleaning</div>
-              <div class="cat-chip">Transport</div>
+            <div class="categories" id="home-categories">
+              <div class="cat-chip active" onclick="filterServices('all', this)">All</div>
+              <div class="cat-chip" onclick="filterServices('design', this)">Design</div>
+              <div class="cat-chip" onclick="filterServices('tech', this)">Tech</div>
+              <div class="cat-chip" onclick="filterServices('tutoring', this)">Tutoring</div>
             </div>
           </div>
           <div>
-            <div class="section-title">Trending services <span onclick="navigate('service')">See all</span></div>
-            <div class="services-grid">
-              <div class="service-card" onclick="navigate('service')">
-                <div class="service-card-img">🎨</div>
+            <div class="section-title">Trending services</div>
+            <div class="services-grid" id="services-grid">
+              
+              <!-- Service 1: Design -->
+              <div class="service-card" data-category="design" onclick="navigate('service')">
+                <div class="service-card-img" style="background:var(--blue-light);"></div>
                 <div class="service-card-body">
                   <div class="sc-title">Logo design</div>
                   <div class="sc-user">by Brian K.</div>
                   <div class="sc-bottom">
                     <div class="sc-price">KES 500</div>
-                    <div class="stars">★ 4.8</div>
+                    <div class="stars">4.8</div>
                   </div>
                 </div>
               </div>
-              <div class="service-card" onclick="navigate('service')">
-                <div class="service-card-img" style="background:#f0fdf4">📚</div>
+
+              <!-- Service 2: Tutoring -->
+              <div class="service-card" data-category="tutoring" onclick="navigate('service')">
+                <div class="service-card-img" style="background:#f0fdf4; color:#16a34a"></div>
                 <div class="service-card-body">
                   <div class="sc-title">Math tutoring</div>
                   <div class="sc-user">by Faith M.</div>
                   <div class="sc-bottom">
                     <div class="sc-price">Barter</div>
-                    <div class="stars">★ 4.9</div>
+                    <div class="stars">4.9</div>
                   </div>
                 </div>
               </div>
-              <div class="service-card" onclick="navigate('service')">
-                <div class="service-card-img" style="background:#fff7ed">💻</div>
+
+              <!-- Service 3: Tech -->
+              <div class="service-card" data-category="tech" onclick="navigate('service')">
+                <div class="service-card-img" style="background:#fff7ed; color:#ea580c"></div>
                 <div class="service-card-body">
-                  <div class="sc-title">Web dev</div>
+                  <div class="sc-title">Web dev setup</div>
                   <div class="sc-user">by Lyon O.</div>
                   <div class="sc-bottom">
                     <div class="sc-price">KES 2,000</div>
-                    <div class="stars">★ 5.0</div>
+                    <div class="stars">5.0</div>
                   </div>
                 </div>
               </div>
-              <div class="service-card" onclick="navigate('service')">
-                <div class="service-card-img" style="background:#fdf4ff">📷</div>
+
+              <!-- Service 4: Design -->
+              <div class="service-card" data-category="design" onclick="navigate('service')">
+                <div class="service-card-img" style="background:#fdf4ff; color:#c026d3"></div>
                 <div class="service-card-body">
                   <div class="sc-title">Photography</div>
                   <div class="sc-user">by Ciku N.</div>
                   <div class="sc-bottom">
                     <div class="sc-price">Both</div>
-                    <div class="stars">★ 4.7</div>
+                    <div class="stars">4.7</div>
                   </div>
                 </div>
               </div>
+
+              <!-- Service 5: Tech -->
+              <div class="service-card" data-category="tech" onclick="navigate('service')">
+                <div class="service-card-img" style="background:#f3f4f6; color:#4b5563"></div>
+                <div class="service-card-body">
+                  <div class="sc-title">Python Scripts</div>
+                  <div class="sc-user">by Dave M.</div>
+                  <div class="sc-bottom">
+                    <div class="sc-price">KES 800</div>
+                    <div class="stars">4.9</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Service 6: Tutoring -->
+              <div class="service-card" data-category="tutoring" onclick="navigate('service')">
+                <div class="service-card-img" style="background:#fef2f2; color:#dc2626"></div>
+                <div class="service-card-body">
+                  <div class="sc-title">Physics Help</div>
+                  <div class="sc-user">by Joy K.</div>
+                  <div class="sc-bottom">
+                    <div class="sc-price">Barter</div>
+                    <div class="stars">4.6</div>
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
           <div>
-            <div class="section-title">Requests near you <span>Browse</span></div>
+            <div class="section-title">Requests near you</div>
             <div class="card" style="display:flex;flex-direction:column;gap:12px">
               <div class="req-row" onclick="navigate('service')">
                 <div class="avatar teal">JO</div>
@@ -633,7 +643,7 @@
                   <div class="ri-title">Need plumber — Westlands</div>
                   <div class="ri-sub">Barter: will offer translation services</div>
                 </div>
-                <div class="req-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+                <div class="req-arrow"></div>
               </div>
               <div style="border-top:1px solid #f1f5f9"></div>
               <div class="req-row" onclick="navigate('service')">
@@ -642,7 +652,7 @@
                   <div class="ri-title">CV writing help needed</div>
                   <div class="ri-sub">Pay: KES 300</div>
                 </div>
-                <div class="req-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+                <div class="req-arrow"></div>
               </div>
             </div>
           </div>
@@ -659,7 +669,7 @@
           <span>History</span>
         </div>
         <div class="nav-item" onclick="navigate('offer')">
-          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
           <span>Offer</span>
         </div>
         <div class="nav-item" onclick="navigate('notif')">
@@ -676,25 +686,24 @@
     <!-- ══ SCREEN: VIEW SERVICE ══ -->
     <div class="screen" id="screen-service">
       <div class="top-bar">
-        <div class="back-btn" onclick="navigate('home')">
-          <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-        </div>
+        <div class="back-btn" onclick="navigate('home')">&lt;</div>
         <h2>Service details</h2>
-        <div class="notif-badge">
-          <svg viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
-        </div>
+        <div class="notif-badge"></div>
       </div>
       <div class="screen-scroll">
-        <div class="service-hero">🎨</div>
+        <div class="service-hero"></div>
         <div class="service-body">
           <div>
             <div style="display:flex;justify-content:space-between;align-items:flex-start">
               <div>
                 <div style="font-size:17px;font-weight:700;color:#1e293b">Logo Design Service</div>
-                <div class="stars" style="font-size:12px;margin-top:3px">★★★★★ <span style="color:#64748b;font-size:10px">(42 reviews)</span></div>
+                <div class="stars" style="font-size:12px;margin-top:3px;display:flex;align-items:center;gap:3px">
+                  <span>4.8</span> 
+                  <span style="color:#64748b;font-size:10px;margin-left:4px">(42 reviews)</span>
+                </div>
               </div>
               <div style="text-align:right">
-                <div style="font-size:17px;font-weight:700;color:#6366f1">KES 500</div>
+                <div style="font-size:17px;font-weight:700;color:var(--blue)">KES 500</div>
                 <span class="badge badge-teal">or Barter</span>
               </div>
             </div>
@@ -703,34 +712,15 @@
             <div class="avatar">BK</div>
             <div class="prov-info">
               <div class="prov-name">Brian Kamau</div>
-              <div class="prov-meta">⭐ 4.8 · 42 jobs · Nairobi</div>
+              <div class="prov-meta">
+                4.8 · 42 jobs · Nairobi
+              </div>
             </div>
-            <span class="badge badge-green">✓ Verified</span>
+            <span class="badge badge-green">Verified</span>
           </div>
           <div>
             <div style="font-size:12px;font-weight:700;color:#1e293b;margin-bottom:6px">About this service</div>
             <div style="font-size:11px;color:#475569;line-height:1.6">Professional logo design tailored to your brand. Includes 3 concepts, unlimited revisions, and final files in PNG, SVG, and PDF. Delivery in 48 hours.</div>
-          </div>
-          <div>
-            <div style="font-size:12px;font-weight:700;color:#1e293b;margin-bottom:8px">Status timeline</div>
-            <div class="timeline">
-              <div class="tl-item">
-                <div class="tl-left"><div class="tl-dot done"></div><div class="tl-line"></div></div>
-                <div class="tl-body"><div class="tl-title">Request sent</div><div class="tl-sub">Aug 10 · 9:00 AM</div></div>
-              </div>
-              <div class="tl-item">
-                <div class="tl-left"><div class="tl-dot active"></div><div class="tl-line"></div></div>
-                <div class="tl-body"><div class="tl-title">Provider accepted</div><div class="tl-sub">Aug 10 · 11:30 AM</div></div>
-              </div>
-              <div class="tl-item">
-                <div class="tl-left"><div class="tl-dot pending"></div><div class="tl-line"></div></div>
-                <div class="tl-body"><div class="tl-title">In progress</div><div class="tl-sub">Estimated Aug 12</div></div>
-              </div>
-              <div class="tl-item">
-                <div class="tl-left"><div class="tl-dot pending"></div></div>
-                <div class="tl-body"><div class="tl-title">Completed & rated</div><div class="tl-sub">—</div></div>
-              </div>
-            </div>
           </div>
           <div>
             <div style="font-size:12px;font-weight:700;color:#1e293b;margin-bottom:8px">Reviews</div>
@@ -738,14 +728,14 @@
               <div class="review-item">
                 <div class="avatar" style="width:30px;height:30px;font-size:11px;border-radius:9px">AM</div>
                 <div class="rev-info">
-                  <div class="rev-name">Alice M. <span class="stars">★★★★★</span></div>
+                  <div class="rev-name">Alice M.</div>
                   <div class="rev-text">Quick turnaround, exactly what I needed!</div>
                 </div>
               </div>
               <div class="review-item">
                 <div class="avatar teal" style="width:30px;height:30px;font-size:11px;border-radius:9px">JO</div>
                 <div class="rev-info">
-                  <div class="rev-name">James O. <span class="stars">★★★★☆</span></div>
+                  <div class="rev-name">James O.</div>
                   <div class="rev-text">Great work, delivered on time. Recommended!</div>
                 </div>
               </div>
@@ -763,9 +753,7 @@
     <!-- ══ SCREEN: OFFER / CREATE SERVICE ══ -->
     <div class="screen" id="screen-offer">
       <div class="top-bar">
-        <div class="back-btn" onclick="navigate('home')">
-          <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-        </div>
+        <div class="back-btn" onclick="navigate('home')">&lt;</div>
         <h2>Post a service</h2>
       </div>
       <div class="screen-scroll">
@@ -773,21 +761,17 @@
           <div>
             <span class="input-label">Listing type</span>
             <div class="type-toggle">
-              <div class="type-btn active" id="type-offer">🛠 Offer service</div>
-              <div class="type-btn" id="type-request" onclick="toggleType()">🙋 Request help</div>
+              <div class="type-btn active" id="type-offer">Offer service</div>
+              <div class="type-btn" id="type-request" onclick="toggleType()">Request help</div>
             </div>
           </div>
           <div>
             <span class="input-label">Service icon</span>
             <div class="emoji-picker">
-              <div class="ep active">🎨</div>
-              <div class="ep">💻</div>
-              <div class="ep">📚</div>
-              <div class="ep">🔧</div>
-              <div class="ep">📷</div>
-              <div class="ep">🚗</div>
-              <div class="ep">🍽</div>
-              <div class="ep">✂️</div>
+              <div class="ep active"></div>
+              <div class="ep"></div>
+              <div class="ep"></div>
+              <div class="ep"></div>
             </div>
           </div>
           <div>
@@ -812,8 +796,8 @@
           <div>
             <span class="input-label">Exchange type</span>
             <div class="type-toggle">
-              <div class="type-btn active">💳 Pay (KES)</div>
-              <div class="type-btn">🔄 Barter</div>
+              <div class="type-btn active">Pay (KES)</div>
+              <div class="type-btn">Barter</div>
               <div class="type-btn">Both</div>
             </div>
           </div>
@@ -831,19 +815,17 @@
       </div>
     </div>
 
-    <!-- ══ SCREEN: NOTIFICATIONS + STATUS ══ -->
+    <!-- ══ SCREEN: NOTIFICATIONS ══ -->
     <div class="screen" id="screen-notif">
       <div class="top-bar">
-        <div class="back-btn" onclick="navigate('home')">
-          <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-        </div>
+        <div class="back-btn" onclick="navigate('home')">&lt;</div>
         <h2>Notifications</h2>
       </div>
       <div class="screen-scroll">
         <div class="notif-body">
           <div style="font-size:11px;font-weight:700;color:#94a3b8;padding:4px 0 2px">NEW</div>
           <div class="notif-item unread">
-            <div class="notif-icon blue">🔄</div>
+            <div class="notif-icon blue"></div>
             <div class="notif-text">
               <div class="nt-title">Barter request received</div>
               <div class="nt-sub">James O. wants to swap Plumbing for your Logo design</div>
@@ -852,7 +834,7 @@
             <div class="unread-dot"></div>
           </div>
           <div class="notif-item unread">
-            <div class="notif-icon green">✅</div>
+            <div class="notif-icon green"></div>
             <div class="notif-text">
               <div class="nt-title">Service request accepted</div>
               <div class="nt-sub">Brian accepted your logo design request</div>
@@ -863,7 +845,7 @@
 
           <div style="font-size:11px;font-weight:700;color:#94a3b8;padding:8px 0 2px">EARLIER</div>
           <div class="notif-item">
-            <div class="notif-icon amber">⏳</div>
+            <div class="notif-icon amber"></div>
             <div class="notif-text">
               <div class="nt-title">Request pending</div>
               <div class="nt-sub">Your CV writing request is waiting for a provider</div>
@@ -871,7 +853,7 @@
             </div>
           </div>
           <div class="notif-item">
-            <div class="notif-icon green">💳</div>
+            <div class="notif-icon green"></div>
             <div class="notif-text">
               <div class="nt-title">Payment received</div>
               <div class="nt-sub">KES 500 from Alice M. for tutoring session</div>
@@ -879,7 +861,7 @@
             </div>
           </div>
           <div class="notif-item">
-            <div class="notif-icon blue">⭐</div>
+            <div class="notif-icon blue"></div>
             <div class="notif-text">
               <div class="nt-title">New review</div>
               <div class="nt-sub">Alice M. left you a 5-star rating</div>
@@ -887,34 +869,11 @@
             </div>
           </div>
           <div class="notif-item">
-            <div class="notif-icon amber">🔔</div>
+            <div class="notif-icon amber"></div>
             <div class="notif-text">
               <div class="nt-title">Reminder</div>
               <div class="nt-sub">Your web dev service expires in 3 days — renew?</div>
               <div class="nt-time">Aug 7</div>
-            </div>
-          </div>
-
-          <div style="font-size:11px;font-weight:700;color:#94a3b8;padding:8px 0 6px">REQUEST STATUS</div>
-          <div class="card">
-            <div style="font-size:12px;font-weight:700;color:#1e293b;margin-bottom:12px">Logo design — Brian K.</div>
-            <div class="timeline">
-              <div class="tl-item">
-                <div class="tl-left"><div class="tl-dot done"></div><div class="tl-line"></div></div>
-                <div class="tl-body"><div class="tl-title">Submitted</div><div class="tl-sub">Aug 10, 9:00 AM</div></div>
-              </div>
-              <div class="tl-item">
-                <div class="tl-left"><div class="tl-dot done"></div><div class="tl-line"></div></div>
-                <div class="tl-body"><div class="tl-title">Accepted</div><div class="tl-sub">Aug 10, 11:30 AM</div></div>
-              </div>
-              <div class="tl-item">
-                <div class="tl-left"><div class="tl-dot active"></div><div class="tl-line"></div></div>
-                <div class="tl-body"><div class="tl-title">In progress</div><div class="tl-sub">Est. Aug 12</div></div>
-              </div>
-              <div class="tl-item">
-                <div class="tl-left"><div class="tl-dot pending"></div></div>
-                <div class="tl-body"><div class="tl-title">Complete</div><div class="tl-sub">—</div></div>
-              </div>
             </div>
           </div>
           <div style="height:10px"></div>
@@ -930,7 +889,7 @@
           <span>History</span>
         </div>
         <div class="nav-item" onclick="navigate('offer')">
-          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
           <span>Offer</span>
         </div>
         <div class="nav-item active" onclick="navigate('notif')">
@@ -951,7 +910,7 @@
           <div class="profile-avatar">AW</div>
           <h2>Amina Wanjiru</h2>
           <p>Nairobi, Kenya · Graphic Designer</p>
-          <div class="edit-btn" onclick="navigate('edit')">✏️ Edit profile</div>
+          <div class="edit-btn" onclick="navigate('edit')">Edit profile</div>
         </div>
         <div class="stats-row">
           <div class="stat-cell"><div class="stat-num">12</div><div class="stat-label">Services done</div></div>
@@ -961,34 +920,34 @@
         <div class="profile-body">
           <div style="height:6px"></div>
           <div class="menu-row" onclick="navigate('history')">
-            <div class="mr-icon" style="background:#eef2ff">📋</div>
+            <div class="mr-icon" style="background:#eff6ff"></div>
             <div class="mr-text">Service history</div>
-            <div class="mr-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+            <div class="mr-arrow"></div>
           </div>
           <div class="menu-row" onclick="navigate('offer')">
-            <div class="mr-icon" style="background:#f0fdf4">🛠</div>
+            <div class="mr-icon" style="background:#f0fdf4; color:#16a34a"></div>
             <div class="mr-text">My listings</div>
-            <div class="mr-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+            <div class="mr-arrow"></div>
           </div>
           <div class="menu-row" onclick="navigate('notif')">
-            <div class="mr-icon" style="background:#fff7ed">⭐</div>
+            <div class="mr-icon" style="background:#fff7ed; color:#ea580c"></div>
             <div class="mr-text">My reviews</div>
-            <div class="mr-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+            <div class="mr-arrow"></div>
           </div>
           <div class="menu-row">
-            <div class="mr-icon" style="background:#f0fdfa">💳</div>
+            <div class="mr-icon" style="background:#f0fdfa; color:#0d9488"></div>
             <div class="mr-text">Payment methods</div>
-            <div class="mr-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+            <div class="mr-arrow"></div>
           </div>
           <div class="menu-row">
-            <div class="mr-icon" style="background:#fdf4ff">🔒</div>
+            <div class="mr-icon" style="background:#fdf4ff; color:#c026d3"></div>
             <div class="mr-text">Privacy & security</div>
-            <div class="mr-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+            <div class="mr-arrow"></div>
           </div>
           <div class="menu-row" onclick="navigate('login')">
-            <div class="mr-icon" style="background:#fef2f2">🚪</div>
+            <div class="mr-icon" style="background:#fef2f2; color:#ef4444"></div>
             <div class="mr-text" style="color:#ef4444">Sign out</div>
-            <div class="mr-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+            <div class="mr-arrow"></div>
           </div>
           <div style="height:10px"></div>
         </div>
@@ -1003,7 +962,7 @@
           <span>History</span>
         </div>
         <div class="nav-item" onclick="navigate('offer')">
-          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
           <span>Offer</span>
         </div>
         <div class="nav-item" onclick="navigate('notif')">
@@ -1020,9 +979,7 @@
     <!-- ══ SCREEN: EDIT PROFILE ══ -->
     <div class="screen" id="screen-edit">
       <div class="top-bar">
-        <div class="back-btn" onclick="navigate('profile')">
-          <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-        </div>
+        <div class="back-btn" onclick="navigate('profile')">&lt;</div>
         <h2>Edit profile</h2>
       </div>
       <div class="screen-scroll">
@@ -1070,9 +1027,7 @@
     <!-- ══ SCREEN: HISTORY ══ -->
     <div class="screen" id="screen-history">
       <div class="top-bar">
-        <div class="back-btn" onclick="navigate('profile')">
-          <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-        </div>
+        <div class="back-btn" onclick="navigate('profile')">&lt;</div>
         <h2>History</h2>
       </div>
       <div class="screen-scroll">
@@ -1091,7 +1046,7 @@
               <div class="hi-sub">Provided by you · Aug 5</div>
               <div class="hi-meta">
                 <span class="badge badge-green">Completed</span>
-                <div class="stars" style="font-size:11px">★★★★★</div>
+                <div class="stars" style="font-size:11px"></div>
               </div>
             </div>
             <div class="hi-price" style="color:#16a34a">+KES 500</div>
@@ -1104,7 +1059,7 @@
               <div class="hi-sub">Swap with James O. · Aug 3</div>
               <div class="hi-meta">
                 <span class="badge badge-teal">Barter</span>
-                <div class="stars" style="font-size:11px">★★★★☆</div>
+                <div class="stars" style="font-size:11px"></div>
               </div>
             </div>
             <button class="rate-btn">Rate</button>
@@ -1117,7 +1072,7 @@
               <div class="hi-sub">Received · Jul 28</div>
               <div class="hi-meta">
                 <span class="badge badge-green">Completed</span>
-                <div class="stars" style="font-size:11px">★★★★★</div>
+                <div class="stars" style="font-size:11px"></div>
               </div>
             </div>
             <div class="hi-price" style="color:#ef4444">−KES 300</div>
@@ -1142,7 +1097,7 @@
               <div class="hi-sub">Provided by you · Jul 15</div>
               <div class="hi-meta">
                 <span class="badge badge-green">Completed</span>
-                <div class="stars" style="font-size:11px">★★★★★</div>
+                <div class="stars" style="font-size:11px"></div>
               </div>
             </div>
             <div class="hi-price" style="color:#16a34a">+KES 2,000</div>
@@ -1161,7 +1116,7 @@
           <span>History</span>
         </div>
         <div class="nav-item" onclick="navigate('offer')">
-          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
           <span>Offer</span>
         </div>
         <div class="nav-item" onclick="navigate('notif')">
@@ -1194,9 +1149,11 @@ function navigate(id) {
   if (!target) return;
   target.classList.add('active');
   requestAnimationFrame(() => target.classList.add('slide-in'));
+  
   // scroll to top
   const scroll = target.querySelector('.screen-scroll');
   if (scroll) scroll.scrollTop = 0;
+  
   // status bar
   const sb = document.querySelector('.status-bar');
   sb.style.display = NO_STATUS.includes(id) ? 'none' : 'flex';
@@ -1207,6 +1164,24 @@ function toggleType() {
   const req = document.getElementById('type-request');
   offer.classList.toggle('active');
   req.classList.toggle('active');
+}
+
+// Category filter function
+function filterServices(category, element) {
+  // Update active state on chips
+  const chips = document.querySelectorAll('#home-categories .cat-chip');
+  chips.forEach(chip => chip.classList.remove('active'));
+  element.classList.add('active');
+
+  // Filter cards in the grid
+  const cards = document.querySelectorAll('#services-grid .service-card');
+  cards.forEach(card => {
+    if (category === 'all' || card.getAttribute('data-category') === category) {
+      card.style.display = 'block';
+    } else {
+      card.style.display = 'none';
+    }
+  });
 }
 </script>
 </body>
